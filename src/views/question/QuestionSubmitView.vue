@@ -34,7 +34,18 @@
       @page-change="onPageChange"
     >
       <template #judgeInfo="{ record }">
-        {{ JSON.stringify(record.judgeInfo) }}
+        <a-tag
+          size="large"
+          :color="getJudgeResultStyleColor(record.judgeInfo.message)"
+        >
+          {{ judgeResultObjectList[record.judgeInfo.message].text }}
+        </a-tag>
+      </template>
+      <!-- 判题状态 -->
+      <template #status="{ record }">
+        <span :style="getJudgeStatusStyle(record.status)">{{
+          judgeStatusObjectList[record.status].text
+        }}</span>
       </template>
       <template #createTime="{ record }">
         {{ moment(record.createTime).format("YYYY-MM-DD") }}
@@ -65,6 +76,56 @@ const searchParams = ref<QuestionSubmitQueryRequest>({
   current: 1,
 });
 
+const judgeStatusObjectList: any = [
+  { text: "等待中", color: "#168cff" },
+  { text: "判题中", color: "#ffb400" },
+  { text: "成功", color: "#00b42a" },
+  { text: "失败", color: "#f53f3f" },
+];
+const getJudgeStatusStyle = (judgeStatus: number) => {
+  if (
+    judgeStatus == undefined ||
+    judgeStatus == null ||
+    judgeStatusObjectList[judgeStatus] == undefined ||
+    judgeStatusObjectList[judgeStatus] == null
+  ) {
+    return `color: #86909c;font-weight: bold;`;
+  }
+  const color = judgeStatusObjectList[judgeStatus].color;
+  return `color: ${color};font-weight: bold;`;
+};
+
+const judgeResultObjectList: any = {
+  Accepted: { text: `成功`, color: "#00b42a" },
+  "Wrong Answer": { text: "答案错误", color: "#f53f3f" },
+  "Runtime Error": { text: "运行错误", color: "#f53f3f" },
+  "Dangerous Operation": { text: "危险操作", color: "#f53f3f" },
+  "Compile Error": { text: "编译错误", color: "#ffb400" },
+  "Time Limit Exceeded": { text: "超时", color: "#0fc6c2" },
+  "Memory Limit Exceeded": { text: "内存溢出", color: "#ff7d00" },
+  "Out Of Memory": { text: "内存不足", color: "#ff7d00" },
+  "Output Limit Exceeded": { text: "输出溢出", color: "#ff7d00" },
+  "Presentation Error": { text: "展示错误", color: "#0fc6c2" },
+  Waiting: { text: "等待中", color: "#168cff" },
+  "System Error": { text: "系统错误", color: "#86909c" },
+  "Language UnSupported": { text: "语言不支持", color: "#0fc6c2" },
+  "Sandbox System Error": { text: "沙箱系统错误", color: "#0fc6c2" },
+  Default: { text: "未知错误", color: "#86909c" },
+  null: { text: "未知错误", color: "#86909c" },
+};
+
+const getJudgeResultStyleColor = (judgeResult: string) => {
+  if (
+    judgeResult == undefined ||
+    judgeResult == null ||
+    judgeResult == "" ||
+    judgeResultObjectList[judgeResult] == undefined ||
+    judgeResultObjectList[judgeResult] == null
+  ) {
+    return judgeResultObjectList["Default"].color;
+  }
+  return judgeResultObjectList[judgeResult].color;
+};
 const loadData = async () => {
   const res = await QuestionControllerService.listQuestionSubmitByPageUsingPost(
     {
@@ -110,7 +171,7 @@ const columns = [
   },
   {
     title: "判题状态",
-    dataIndex: "status",
+    slotName: "status",
   },
   {
     title: "题目 id",

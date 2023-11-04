@@ -63,7 +63,7 @@ export const routes: Array<RouteRecordRaw> = [
     name: "创建题目",
     component: AddQuestionView,
     meta: {
-      access: ACCESS_ENUM.USER,
+      access: ACCESS_ENUM.ADMIN,
     },
   },
   {
@@ -72,7 +72,7 @@ export const routes: Array<RouteRecordRaw> = [
     component: AddQuestionView,
     meta: {
       hideInMenu: true,
-      access: ACCESS_ENUM.USER,
+      access: ACCESS_ENUM.ADMIN,
     },
     // meta: {
     //   access: ACCESS_ENUM.ADMIN,
@@ -83,7 +83,7 @@ export const routes: Array<RouteRecordRaw> = [
     name: "管理题目",
     component: ManageQuestionView,
     meta: {
-      access: ACCESS_ENUM.USER,
+      access: ACCESS_ENUM.ADMIN,
     },
   },
   {
