@@ -47,6 +47,12 @@
           judgeStatusObjectList[record.status].text
         }}</span>
       </template>
+      <template #questionName="{ record }">
+        {{ record.questionName }}
+      </template>
+      <template #userName="{ record }">
+        {{ record.userVO.userName }}
+      </template>
       <template #createTime="{ record }">
         {{ moment(record.createTime).format("YYYY-MM-DD") }}
       </template>
@@ -174,12 +180,12 @@ const columns = [
     slotName: "status",
   },
   {
-    title: "题目 id",
-    dataIndex: "questionId",
+    title: "题目",
+    slotName: "questionName",
   },
   {
-    title: "提交者 id",
-    dataIndex: "userId",
+    title: "提交者",
+    slotName: "userName",
   },
   {
     title: "创建时间",
