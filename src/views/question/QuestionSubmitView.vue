@@ -102,7 +102,7 @@ const getJudgeStatusStyle = (judgeStatus: number) => {
 };
 
 const judgeResultObjectList: any = {
-  Accepted: { text: `成功`, color: "#00b42a" },
+  Accepted: { text: `通过`, color: "#00b42a" },
   "Wrong Answer": { text: "答案错误", color: "#f53f3f" },
   "Runtime Error": { text: "运行错误", color: "#f53f3f" },
   "Dangerous Operation": { text: "危险操作", color: "#f53f3f" },

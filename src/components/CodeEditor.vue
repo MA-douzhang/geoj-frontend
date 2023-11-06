@@ -2,7 +2,7 @@
   <div
     id="code-editor"
     ref="codeEditorRef"
-    style="min-height: 400px; height: 60vh"
+    v-bind:style="{ height: props.codeHeight }"
   />
   <!--  <a-button @click="fillValue">填充值</a-button>-->
 </template>
@@ -17,6 +17,7 @@ import { onMounted, ref, toRaw, withDefaults, defineProps } from "vue";
 interface Props {
   value: string;
   language?: string;
+  codeHeight: string;
   handleChange: (v: string) => void;
 }
 
@@ -29,6 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
   handleChange: (v: string) => {
     console.log(v);
   },
+  codeHeight: () => "65vh",
 });
 
 const codeEditorRef = ref();
@@ -65,6 +67,7 @@ onMounted(() => {
   // 编辑 监听内容变化
   codeEditor.value.onDidChangeModelContent(() => {
     props.handleChange(toRaw(codeEditor.value).getValue());
+    console.log("props.codeHeight", props.codeHeight);
   });
 });
 </script>
