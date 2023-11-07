@@ -36,9 +36,9 @@
       <template #judgeInfo="{ record }">
         <a-tag
           size="large"
-          :color="getJudgeResultStyleColor(record.judgeInfo.message)"
+          :color="getJudgeResultStyleColor(record.judgeInfo.status)"
         >
-          {{ judgeResultObjectList[record.judgeInfo.message].text }}
+          {{ judgeResultObjectList[record.judgeInfo.status].text }}
         </a-tag>
       </template>
       <!-- 判题状态 -->
@@ -65,6 +65,7 @@ import { onMounted, ref, watchEffect } from "vue";
 import {
   Question,
   QuestionControllerService,
+  QuestionSubmitControllerService,
   QuestionSubmitQueryRequest,
 } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
@@ -133,13 +134,12 @@ const getJudgeResultStyleColor = (judgeResult: string) => {
   return judgeResultObjectList[judgeResult].color;
 };
 const loadData = async () => {
-  const res = await QuestionControllerService.listQuestionSubmitByPageUsingPost(
-    {
+  const res =
+    await QuestionSubmitControllerService.listQuestionSubmitByPageUsingPost({
       ...searchParams.value,
       sortField: "createTime",
       sortOrder: "descend",
-    }
-  );
+    });
   if (res.code === 0) {
     dataList.value = res.data.records;
     total.value = res.data.total;

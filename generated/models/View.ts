@@ -3,6 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type PostThumbAddRequest = {
-    postId?: number;
+export type View = {
+    contentType?: string;
 };

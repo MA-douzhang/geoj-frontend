@@ -67,7 +67,7 @@ onMounted(() => {
   // 编辑 监听内容变化
   codeEditor.value.onDidChangeModelContent(() => {
     props.handleChange(toRaw(codeEditor.value).getValue());
-    console.log("props.codeHeight", props.codeHeight);
+    console.log("props.codeHeight", props.language);
   });
 });
 </script>

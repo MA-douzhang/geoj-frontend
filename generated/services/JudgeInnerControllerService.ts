@@ -2,34 +2,29 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { BaseResponse_string_ } from '../models/BaseResponse_string_';
+import type { QuestionSubmit } from '../models/QuestionSubmit';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
-export class FileControllerService {
+export class JudgeInnerControllerService {
 
     /**
-     * uploadFile
-     * @param biz 
-     * @param file 
-     * @returns BaseResponse_string_ OK
+     * doJudge
+     * @param questionSubmitId questionSubmitId
+     * @returns QuestionSubmit OK
      * @returns any Created
      * @throws ApiError
      */
-    public static uploadFileUsingPost(
-biz?: string,
-file?: Blob,
-): CancelablePromise<BaseResponse_string_ | any> {
+    public static doJudgeUsingPost(
+questionSubmitId: number,
+): CancelablePromise<QuestionSubmit | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/file/upload',
+            url: '/api/judge/inner/do',
             query: {
-                'biz': biz,
-            },
-            formData: {
-                'file': file,
+                'questionSubmitId': questionSubmitId,
             },
             errors: {
                 401: `Unauthorized`,

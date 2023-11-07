@@ -70,20 +70,20 @@
         <a-divider size="0" />
         <a-card body-Style="{padding: 0" style="border-radius: 4px}">
           <div v-if="terminalOpen" style="position: relative; height: 150px">
-            <a-tabs v-model="activeTerminal">
+            <a-tabs v-model:activeKey="activeTerminal">
               <a-tab-pane key="1" title="测试用例">
                 <template v-if="activeTerminal">
-                  <div id="labelStyle">输入</div>
+                  <div class="labelStyle">输入</div>
                   <a-textarea v-model="textInput" />
                 </template>
               </a-tab-pane>
               <a-tab-pane key="2" title="执行结果">
                 <template v-if="testResult">
-                  <div id="labelStyle">输入</div>
-                  <div id="cardStyle">{testResult.input}</div>
+                  <div class="labelStyle">输入</div>
+                  <div class="cardStyle">{{ testResult.input }}</div>
                   <div style="margin-top: 16px"></div>
-                  <div id="labelStyle">输出</div>
-                  <div id="cardStyle">{testResult.output}</div>
+                  <div class="labelStyle">输出</div>
+                  <div class="cardStyle">{{ testResult.output }}</div>
                 </template>
                 <template v-else>
                   <a-skeleton v-if="testResultLoading">
@@ -106,6 +106,7 @@
               </a-tab-pane>
             </a-tabs>
           </div>
+          <a-divider size="0" />
           <div style="padding: 8px">
             <a-button
               @click="clickTerminal"
@@ -145,16 +146,26 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watchEffect, withDefaults, defineProps } from "vue";
+import {
+  onMounted,
+  ref,
+  watchEffect,
+  withDefaults,
+  defineProps,
+  reactive,
+} from "vue";
 import message from "@arco-design/web-vue/es/message";
 import CodeEditor from "@/components/CodeEditor.vue";
 import MdViewer from "@/components/MdViewer.vue";
 import {
   JudgeCase,
   QuestionControllerService,
+  QuestionRunResult,
   QuestionSubmitAddRequest,
+  QuestionSubmitControllerService,
   QuestionVO,
 } from "../../../generated";
+import { isUndefined } from "@arco-design/web-vue/es/_utils/is";
 
 interface Props {
   id: string;
@@ -168,9 +179,9 @@ const question = ref<QuestionVO>();
 const terminalOpen = ref<boolean>(false);
 const activeTerminal = ref<string>("1");
 const coderHeight = ref<string>("65vh");
-const testResult = ref<JudgeCase>();
 const testResultLoading = ref<boolean>(false);
-
+const textInput = ref<string>();
+const testResult = ref<QuestionRunResult>();
 const loadData = async () => {
   const res = await QuestionControllerService.getQuestionVoByIdUsingGet(
     props.id as any
@@ -195,7 +206,7 @@ const doSubmit = async () => {
     return;
   }
 
-  const res = await QuestionControllerService.doQuestionSubmitUsingPost({
+  const res = await QuestionSubmitControllerService.doQuestionSubmitUsingPost({
     ...form.value,
     questionId: question.value.id,
   });
@@ -206,6 +217,30 @@ const doSubmit = async () => {
   }
 };
 
+/**
+ * 提交测试
+ */
+const doRun = async () => {
+  console.log(isUndefined(textInput.value));
+  if (isUndefined(textInput.value)) {
+    message.error("请输入示例");
+    return;
+  }
+  testResultLoading.value = true;
+  activeTerminal.value = "2";
+  const res = await QuestionSubmitControllerService.doQuestionRunUsingPost({
+    ...form.value,
+    input: textInput.value,
+  });
+  if (res.code === 0) {
+    message.success("运行成功");
+    testResult.value = res.data;
+    testResultLoading.value = false;
+  } else {
+    testResultLoading.value = false;
+    message.error("提交失败," + res.message);
+  }
+};
 /**
  * 页面加载时，请求数据
  */
@@ -223,7 +258,6 @@ const changeCode = (value: string) => {
 const clickTerminal = () => {
   terminalOpen.value = !terminalOpen.value;
   if (terminalOpen.value) {
-    console.log("关闭");
     coderHeight.value = "45vh";
     // setLogHeight("calc(100vh - 170px)");
   } else {
@@ -243,15 +277,15 @@ const clickTerminal = () => {
   margin-bottom: 0 !important;
 }
 
-#labelStyle {
+.labelStyle {
   color: #3c3c4399;
-  fontsize: 0.75rem;
-  fontweight: 500;
-  marginbottom: 8;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-bottom: 8px;
 }
-#cardStyle {
-  borderradius: 0.5rem;
-  backgroundcolor: #000a2008;
+.cardStyle {
+  border-radius: 0.5rem;
+  background-color: #000a2008;
   padding: 6px 10px;
 }
 </style>
