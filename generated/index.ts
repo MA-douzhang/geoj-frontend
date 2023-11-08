@@ -75,3 +75,8 @@ export type { QuestionRunRequest } from './models/QuestionRunRequest';
 export type { QuestionRunResult } from './models/QuestionRunResult';
 
 
+/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export type { BaseResponse_QuestionSubmitVO_ } from './models/BaseResponse_QuestionSubmitVO_';

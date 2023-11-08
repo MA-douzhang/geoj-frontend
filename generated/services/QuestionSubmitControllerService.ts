@@ -2,16 +2,17 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { BaseResponse_long_ } from '../../generated/models/BaseResponse_long_';
-import type { BaseResponse_Page_QuestionSubmitVO_ } from '../../generated/models/BaseResponse_Page_QuestionSubmitVO_';
-import type { BaseResponse_QuestionRunResult_ } from '../../generated/models/BaseResponse_QuestionRunResult_';
-import type { QuestionRunRequest } from '../../generated/models/QuestionRunRequest';
-import type { QuestionSubmitAddRequest } from '../../generated/models/QuestionSubmitAddRequest';
-import type { QuestionSubmitQueryRequest } from '../../generated/models/QuestionSubmitQueryRequest';
+import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
+import type { BaseResponse_Page_QuestionSubmitVO_ } from '../models/BaseResponse_Page_QuestionSubmitVO_';
+import type { BaseResponse_QuestionRunResult_ } from '../models/BaseResponse_QuestionRunResult_';
+import type { BaseResponse_QuestionSubmitVO_ } from '../models/BaseResponse_QuestionSubmitVO_';
+import type { QuestionRunRequest } from '../models/QuestionRunRequest';
+import type { QuestionSubmitAddRequest } from '../models/QuestionSubmitAddRequest';
+import type { QuestionSubmitQueryRequest } from '../models/QuestionSubmitQueryRequest';
 
-import type { CancelablePromise } from '../../generated/core/CancelablePromise';
-import { OpenAPI } from '../../generated/core/OpenAPI';
-import { request as __request } from '../../generated/core/request';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
 
 export class QuestionSubmitControllerService {
 
@@ -29,6 +30,29 @@ questionSubmitAddRequest: QuestionSubmitAddRequest,
             method: 'POST',
             url: '/api/question/submit/do',
             body: questionSubmitAddRequest,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * getProblemSubmitVoById
+     * @param id id
+     * @returns BaseResponse_QuestionSubmitVO_ OK
+     * @throws ApiError
+     */
+    public static getProblemSubmitVoByIdUsingGet(
+id?: number,
+): CancelablePromise<BaseResponse_QuestionSubmitVO_> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/question/submit/get/submit',
+            query: {
+                'id': id,
+            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

@@ -41,30 +41,42 @@
           body-style="{padding: 0;display: flex; flexDirection: column; height: 100%}"
           style="flex-grow: 1; margin-bottom: 8px; border-radius: 4px"
         >
-          <a-form :model="form" layout="inline">
-            <a-form-item
-              field="language"
-              label="编程语言"
-              style="min-width: 240px"
-            >
-              <a-select
-                v-model="form.language"
-                :style="{ width: '320px' }"
-                placeholder="选择编程语言"
+          <template v-if="targetSubmitId > 0">
+            <SubmitDetail
+              :target-submit-id="targetSubmitId"
+              :log-height="coderHeight"
+              :after-close="
+                () => {
+                  console.log('点击');
+                }
+              "
+          /></template>
+          <template v-else>
+            <a-form :model="form" layout="inline">
+              <a-form-item
+                field="language"
+                label="编程语言"
+                style="min-width: 240px"
               >
-                <a-option>java</a-option>
-                <a-option>cpp</a-option>
-                <a-option>go</a-option>
-                <a-option>html</a-option>
-              </a-select>
-            </a-form-item>
-          </a-form>
-          <CodeEditor
-            :value="form.code as string"
-            :language="form.language"
-            :handle-change="changeCode"
-            :code-height="coderHeight"
-          />
+                <a-select
+                  v-model="form.language"
+                  :style="{ width: '320px' }"
+                  placeholder="选择编程语言"
+                >
+                  <a-option>java</a-option>
+                  <a-option>cpp</a-option>
+                  <a-option>go</a-option>
+                  <a-option>html</a-option>
+                </a-select>
+              </a-form-item>
+            </a-form>
+            <CodeEditor
+              :value="form.code as string"
+              :language="form.language"
+              :handle-change="changeCode"
+              :code-height="coderHeight"
+            />
+          </template>
         </a-card>
 
         <a-divider size="0" />
@@ -166,6 +178,7 @@ import {
   QuestionVO,
 } from "../../../generated";
 import { isUndefined } from "@arco-design/web-vue/es/_utils/is";
+import SubmitDetail from "@/components/SubmitDetail.vue";
 
 interface Props {
   id: string;
@@ -179,9 +192,12 @@ const question = ref<QuestionVO>();
 const terminalOpen = ref<boolean>(false);
 const activeTerminal = ref<string>("1");
 const coderHeight = ref<string>("65vh");
+const SubmitDetailHeight = ref<string>("65vh");
 const testResultLoading = ref<boolean>(false);
+const resultLoading = ref<boolean>(false);
 const textInput = ref<string>();
 const testResult = ref<QuestionRunResult>();
+const targetSubmitId = ref<number>(0);
 const loadData = async () => {
   const res = await QuestionControllerService.getQuestionVoByIdUsingGet(
     props.id as any
@@ -211,7 +227,9 @@ const doSubmit = async () => {
     questionId: question.value.id,
   });
   if (res.code === 0) {
+    console.log("targetSubmitId", targetSubmitId);
     message.success("提交成功");
+    targetSubmitId.value = res.data;
   } else {
     message.error("提交失败," + res.message);
   }
@@ -259,7 +277,7 @@ const clickTerminal = () => {
   terminalOpen.value = !terminalOpen.value;
   if (terminalOpen.value) {
     coderHeight.value = "45vh";
-    // setLogHeight("calc(100vh - 170px)");
+    // SubmitDetailHeight.value =;
   } else {
     // setCoderHeight("calc(100vh - 322px)");
     coderHeight.value = "65vh";
