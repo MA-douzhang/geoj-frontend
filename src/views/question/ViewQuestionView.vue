@@ -50,6 +50,7 @@
                   console.log('点击');
                 }
               "
+              @submitIdWatch="onReceiveMsg"
           /></template>
           <template v-else>
             <a-form :model="form" layout="inline">
@@ -221,7 +222,6 @@ const doSubmit = async () => {
   if (!question.value?.id) {
     return;
   }
-
   const res = await QuestionSubmitControllerService.doQuestionSubmitUsingPost({
     ...form.value,
     questionId: question.value.id,
@@ -269,7 +269,11 @@ onMounted(() => {
 const changeCode = (value: string) => {
   form.value.code = value;
 };
-
+// 子组件触发的方法
+const onReceiveMsg = (params: number) => {
+  console.log("子组件触发的方法", params);
+  targetSubmitId.value = params;
+};
 /**
  * 点击控制台按钮
  */

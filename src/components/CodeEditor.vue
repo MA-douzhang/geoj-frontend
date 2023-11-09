@@ -19,6 +19,7 @@ interface Props {
   language?: string;
   codeHeight: string;
   handleChange: (v: string) => void;
+  previewOnly: boolean;
 }
 
 /**
@@ -31,6 +32,7 @@ const props = withDefaults(defineProps<Props>(), {
     console.log(v);
   },
   codeHeight: () => "65vh",
+  previewOnly: false,
 });
 
 const codeEditorRef = ref();
@@ -57,8 +59,9 @@ onMounted(() => {
     minimap: {
       enabled: true,
     },
-    readOnly: false,
+    readOnly: props.previewOnly,
     theme: "vs-dark",
+    scrollBeyondLastLine: false,
     // lineNumbers: "off",
     // roundedSelection: false,
     // scrollBeyondLastLine: false,

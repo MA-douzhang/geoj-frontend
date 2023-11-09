@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="margin: 5px 16px">
-      <a-button @click="getSubmit">
+      <a-button @click="closeDetail">
         <template #icon>
           <icon-close class="closeCss" />
         </template>
@@ -45,9 +45,9 @@
                 }"
               >
                 <template #icon>
-                  <!--                  <icon-check-circle />-->
-
-                  {{ submitStatusIcon.get(questionSubmit.status) }}
+                  <FunctionalIcons
+                    :icon-name="submitStatusIcon.get(questionSubmit.status)"
+                  />
                 </template>
                 {{ submitStatusText.get(questionSubmit.status) }}
               </a-button>
@@ -55,11 +55,9 @@
           </div>
 
           <div style="margin-top: 16px">
-            <Tag
-              style="border-radius: 16px; padding: 0 12px"
-              color="processing"
-              >{{ languageLabel.get(questionSubmit.language) }}</Tag
-            >
+            <a-tag style="border-radius: 16px; padding: 0 12px" color="blue"
+              >{{ languageLabel.get(questionSubmit.language) }}
+            </a-tag>
             <template v-if="questionSubmit.judgeInfo.time">
               <a-tag style="border-radius: 16px; padding: 0 12px" color="green">
                 <template #icon>
@@ -100,14 +98,14 @@
               <template
                 v-if="
                   questionSubmit.judgeInfo.status ===
-                  JUDGE_INFO_STATUS['Wrong Answer']
+                  JUDGE_INFO_STATUS['Wrong Answer'].name
                 "
               >
                 <div style="margin-top: 16px">
                   <div>最后执行输入</div>
-                  <Divider style="margin: 4px 0" />
+                  <a-divider style="margin: 4px 0" />
                   <div style="color: black">
-                    {problemSubmit.judgeInfo.input}
+                    {{ questionSubmit.judgeInfo.input }}
                   </div>
 
                   <div style="margin-top: 16px">预期输出</div>
@@ -125,10 +123,10 @@
               </template>
             </div>
           </template>
-          <MdEditor
+          <CodeEditor
             :previewOnly="true"
-            :value="`\`\`\`\n${questionSubmit?.code}\n\`\`\`` || ''"
-            editorId="log"
+            :value="questionSubmit?.code || ''"
+            :language="questionSubmit.language"
           />
           <div style="margin: 16px 20px">
             <a-skeleton paragraph="rows: 10" />
@@ -140,9 +138,6 @@
 </template>
 
 <script setup lang="ts">
-import gfm from "@bytemd/plugin-gfm";
-import highlight from "@bytemd/plugin-highlight";
-import { Editor, Viewer } from "@bytemd/vue-next";
 import moment from "moment";
 import { ref, withDefaults, defineProps, watchEffect } from "vue";
 import { useStore } from "vuex";
@@ -150,7 +145,8 @@ import {
   QuestionSubmitControllerService,
   QuestionSubmitVO,
 } from "../../generated";
-import useState from "@arco-design/web-vue/es/_hooks/use-state";
+import { Icon } from "@arco-design/web-vue";
+
 import {
   Color,
   JUDGE_INFO_STATUS,
@@ -161,6 +157,9 @@ import {
   submitStatusText,
 } from "../utils/constants";
 import MdEditor from "@/components/MdEditor.vue";
+import { languages } from "monaco-editor";
+import FunctionalIcons from "@/components/icon/FunctionalIcons.vue";
+import CodeEditor from "@/components/CodeEditor.vue";
 
 /**
  * 定义组件属性类型
@@ -170,11 +169,14 @@ interface Props {
   logHeight: string;
   afterClose: () => void;
 }
+
 const store = useStore();
 const currentUser = store.state.user.loginUser;
 const questionSubmit = ref<QuestionSubmitVO>();
 const loading = ref<boolean>(true);
-
+const timer = ref();
+// eslint-disable-next-line no-undef,vue/valid-define-emits
+const emit = defineEmits();
 /**
  * 给组件指定初始值
  */
@@ -188,19 +190,14 @@ const props = withDefaults(defineProps<Props>(), {
 
 watchEffect(() => {
   console.log("初始化成功", props.targetSubmitId);
-  if (props.targetSubmitId) {
-    QuestionSubmitControllerService.getProblemSubmitVoByIdUsingGet(
-      props.targetSubmitId
-    ).then((res) => {
-      if (res.code === 0) {
-        loading.value = false;
-        questionSubmit.value = res.data;
-        console.log("初始化成功", questionSubmit);
-      }
-    });
-  }
+  timer.value = window.setInterval(() => {
+    setTimeout(() => {
+      getQuestionSubmit(); //调用接口的方法
+    }, 0);
+  }, 500);
 });
-const getSubmit = () => {
+
+const getQuestionSubmit = () => {
   if (props.targetSubmitId) {
     QuestionSubmitControllerService.getProblemSubmitVoByIdUsingGet(
       props.targetSubmitId
@@ -209,13 +206,18 @@ const getSubmit = () => {
         loading.value = false;
         questionSubmit.value = res.data;
         console.log("初始化成功", questionSubmit);
+        if (res.data?.judgeInfo?.status) {
+          //结束轮询清除定时器
+          window.clearInterval(timer.value);
+        }
       }
     });
   }
 };
+
 const closeDetail = () => {
   console.log("关闭");
-  props.afterClose();
+  emit("submitIdWatch", 0);
 };
 </script>
 
@@ -227,6 +229,7 @@ const closeDetail = () => {
 .closeCss {
   color: rgb(140, 140, 140);
   cursor: pointer;
+
   :hover {
     color: black;
   }
