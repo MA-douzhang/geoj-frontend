@@ -2,9 +2,18 @@
   <div id="viewQuestionView">
     <a-row :gutter="[24, 24]">
       <a-col :md="12" :xs="24">
-        <a-card v-if="question" :title="question.title">
-          <a-tabs default-active-key="question">
-            <a-tab-pane key="question" title="题目">
+        <a-tabs default-active-key="question" type="line">
+          <a-tab-pane key="question" title="题目">
+            <a-card
+              v-if="question"
+              :title="question.title"
+              style="
+                height: 58.5vh;
+                min-height: 380px;
+                overflow: auto;
+                border: none;
+              "
+            >
               <a-descriptions
                 title="判题条件"
                 :column="{ xs: 1, md: 2, lg: 3 }"
@@ -25,16 +34,19 @@
                   <a-tag
                     v-for="(tag, index) of question.tags"
                     :key="index"
-                    color="green"
+                    size="large"
+                    :color="getTagsObjectList(tag)"
                     >{{ tag }}
                   </a-tag>
                 </a-space>
               </template>
-            </a-tab-pane>
-            <a-tab-pane key="comment" title="评论" disabled> 评论区</a-tab-pane>
-            <a-tab-pane key="answer" title="答案"> 暂时无法查看答案</a-tab-pane>
-          </a-tabs>
-        </a-card>
+            </a-card>
+          </a-tab-pane>
+          <a-tab-pane key="answer" title="答案">
+            <MdViewer :value="question?.answer || '暂无答案'" />
+          </a-tab-pane>
+          <a-tab-pane key="ai" title="AI智能分析"> AI智能分析</a-tab-pane>
+        </a-tabs>
       </a-col>
       <a-col :md="12" :xs="24">
         <a-card
@@ -178,6 +190,7 @@ import {
   QuestionSubmitControllerService,
   QuestionVO,
 } from "../../../generated";
+import { tagsObjectList } from "../../utils/constants";
 import { isUndefined } from "@arco-design/web-vue/es/_utils/is";
 import SubmitDetail from "@/components/SubmitDetail.vue";
 
@@ -286,6 +299,17 @@ const clickTerminal = () => {
     // setCoderHeight("calc(100vh - 322px)");
     coderHeight.value = "65vh";
   }
+};
+
+/**
+ * 获得标签颜色
+ * @param tag
+ */
+const getTagsObjectList = (tag: string) => {
+  if (tag == "" || tag == undefined || tagsObjectList.get(tag) == undefined) {
+    return tagsObjectList.get("default");
+  }
+  return tagsObjectList.get(tag);
 };
 </script>
 

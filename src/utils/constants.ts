@@ -2,6 +2,7 @@ export const Color = {
   EASY: "#00AF9B",
   MEDIUM: "#FFB800",
   HARD: "#FF2D55",
+  DEFAULT: "#168cff",
 };
 
 //Content页面
@@ -55,6 +56,13 @@ export const SUBMIT_STATUS = {
   FAILED: 3,
   CompileError: 4,
 };
+//Content页面
+export const tagsObjectList = new Map<string, string>([
+  ["default", Color.DEFAULT],
+  ["简单", Color.EASY],
+  ["中等", Color.MEDIUM],
+  ["困难", Color.HARD],
+]);
 
 export const JUDGE_INFO_STATUS = {
   Accepted: { text: `通过`, color: "#00b42a", name: "Accepted" },
