@@ -80,3 +80,8 @@ export type { QuestionRunResult } from './models/QuestionRunResult';
 /* tslint:disable */
 /* eslint-disable */
 export type { BaseResponse_QuestionSubmitVO_ } from './models/BaseResponse_QuestionSubmitVO_';
+
+export type { AnswerAi } from './models/AnswerAi';
+export type { BaseResponse_AnswerAi_ } from './models/BaseResponse_AnswerAi_';
+
+export { QuestionAiControllerService } from './services/QuestionAiControllerService';

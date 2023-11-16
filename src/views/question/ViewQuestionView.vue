@@ -2,7 +2,7 @@
   <div id="viewQuestionView">
     <a-row :gutter="[24, 24]">
       <a-col :md="12" :xs="24">
-        <a-tabs default-active-key="question" type="line">
+        <a-tabs v-model:active-key="changeTab" type="line">
           <a-tab-pane key="question" title="题目">
             <a-card
               v-if="question"
@@ -45,7 +45,41 @@
           <a-tab-pane key="answer" title="答案">
             <MdViewer :value="question?.answer || '暂无答案'" />
           </a-tab-pane>
-          <a-tab-pane key="ai" title="AI智能分析"> AI智能分析</a-tab-pane>
+          <a-tab-pane key="ai" title="AI智能分析">
+            <template v-if="targetSubmitId > 0">
+              <a-skeleton animation v-if="aiResultLoading">
+                <a-skeleton-line :rows="4" />
+                <a-skeleton-line :rows="4" />
+                <a-skeleton-line :rows="4" />
+              </a-skeleton>
+              <a-card
+                v-else
+                body-style="{padding: 0;display: flex; flexDirection: column;}"
+                v-bind:style="{
+                  flexGrow: '1',
+                  marginBottom: '8px',
+                  borderRadius: '4px',
+                  overflow: 'scroll',
+                  height: aiHeight,
+                }"
+              >
+                <a-card :style="{ marginBottom: '20px' }" title="解题思路">
+                  {{ aiResult?.solutionIdea }}
+                </a-card>
+                <a-card :style="{ marginBottom: '20px' }" title="错误原因">
+                  {{ aiResult?.reason }}
+                </a-card>
+                <a-card title="优化代码">
+                  <CodeEditor
+                    :previewOnly="true"
+                    :value="aiResult?.codeAi || ''"
+                    :language="form.language"
+                  />
+                </a-card>
+              </a-card>
+            </template>
+            <template v-else> 请先提交代码 </template>
+          </a-tab-pane>
         </a-tabs>
       </a-col>
       <a-col :md="12" :xs="24">
@@ -63,7 +97,8 @@
                 }
               "
               @submitIdWatch="onReceiveMsg"
-          /></template>
+            />
+          </template>
           <template v-else>
             <a-form :model="form" layout="inline">
               <a-form-item
@@ -147,6 +182,15 @@
             </a-button>
             <a-space style="float: right">
               <a-button
+                v-if="targetSubmitId > 0"
+                size="medium"
+                type="outline "
+                style="width: 66px; height: 28px"
+                @click="AiRun"
+              >
+                Ai分析
+              </a-button>
+              <a-button
                 size="medium"
                 type="outline "
                 style="width: 66px; height: 28px"
@@ -183,7 +227,9 @@ import message from "@arco-design/web-vue/es/message";
 import CodeEditor from "@/components/CodeEditor.vue";
 import MdViewer from "@/components/MdViewer.vue";
 import {
+  AnswerAi,
   JudgeCase,
+  QuestionAiControllerService,
   QuestionControllerService,
   QuestionRunResult,
   QuestionSubmitAddRequest,
@@ -206,12 +252,27 @@ const question = ref<QuestionVO>();
 const terminalOpen = ref<boolean>(false);
 const activeTerminal = ref<string>("1");
 const coderHeight = ref<string>("65vh");
-const SubmitDetailHeight = ref<string>("65vh");
+const aiHeight = ref<string>("83vh");
+const aiResultLoading = ref<boolean>(false);
 const testResultLoading = ref<boolean>(false);
 const resultLoading = ref<boolean>(false);
 const textInput = ref<string>();
 const testResult = ref<QuestionRunResult>();
 const targetSubmitId = ref<number>(0);
+const changeTab = ref<string>("question");
+const aiResult = ref<AnswerAi>();
+const aiText = ref<string>(
+  "正确的解题代码\n" +
+    "import java.util.Scanner;\n" +
+    "public class Main{\n" +
+    "    public static void main(String[] args){\n" +
+    "        Scanner sc = new Scanner(System.in);\n" +
+    "        int a= sc.nextInt();\n" +
+    "        int b = sc.nextInt();\n" +
+    "        System.out.println(a+b);\n" +
+    "    }\n" +
+    "}"
+);
 const loadData = async () => {
   const res = await QuestionControllerService.getQuestionVoByIdUsingGet(
     props.id as any
@@ -272,6 +333,27 @@ const doRun = async () => {
     message.error("提交失败," + res.message);
   }
 };
+
+/**
+ * 执行ai分析
+ * @constructor
+ */
+const AiRun = async () => {
+  aiResultLoading.value = true;
+  message.info("正在分析，请耐心等待");
+  changeTab.value = "ai";
+  const res = await QuestionAiControllerService.getAnswerAiUsingPost(
+    targetSubmitId.value
+  );
+  if (res.code === 0) {
+    message.success("分析成功成功");
+    aiResult.value = res.data;
+    aiResultLoading.value = false;
+  } else {
+    aiResultLoading.value = false;
+    message.error("分析失败," + res.message);
+  }
+};
 /**
  * 页面加载时，请求数据
  */
@@ -329,6 +411,7 @@ const getTagsObjectList = (tag: string) => {
   font-weight: 500;
   margin-bottom: 8px;
 }
+
 .cardStyle {
   border-radius: 0.5rem;
   background-color: #000a2008;

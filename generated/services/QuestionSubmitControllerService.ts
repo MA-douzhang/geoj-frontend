@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { BaseResponse_AnswerAi_ } from '../models/BaseResponse_AnswerAi_';
 import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
 import type { BaseResponse_Page_QuestionSubmitVO_ } from '../models/BaseResponse_Page_QuestionSubmitVO_';
 import type { BaseResponse_QuestionRunResult_ } from '../models/BaseResponse_QuestionRunResult_';
@@ -30,6 +31,30 @@ questionSubmitAddRequest: QuestionSubmitAddRequest,
             method: 'POST',
             url: '/api/question/submit/do',
             body: questionSubmitAddRequest,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * getAnswerAi
+     * @param id id
+     * @returns BaseResponse_AnswerAi_ OK
+     * @returns any Created
+     * @throws ApiError
+     */
+    public static getAnswerAiUsingPost1(
+id?: number,
+): CancelablePromise<BaseResponse_AnswerAi_ | any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/question/submit/get/ai',
+            query: {
+                'id': id,
+            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
