@@ -22,8 +22,26 @@
       </a-menu>
     </a-col>
     <a-col flex="100px">
+      <!--      <img-->
+      <!--        alt="logo"-->
+      <!--        src="https://shiji-1258573901.cos.ap-chengdu.myqcloud.com/avatar.png"-->
+      <!--      />-->
       <div>
-        {{ store.state.user?.loginUser?.userName ?? "未登录" }}
+        <a-dropdown>
+          <a-button>
+            {{ store.state.user?.loginUser?.userName ?? "未登录" }}
+          </a-button>
+          <template
+            v-if="store.state.user?.loginUser?.userName !== `未登录`"
+            #content
+          >
+            <a-doption>个人信息</a-doption>
+            <a-doption @click="logout">退出</a-doption>
+          </template>
+          <template v-else #content>
+            <a-doption @click="login">登录</a-doption>
+          </template>
+        </a-dropdown>
       </div>
     </a-col>
   </a-row>
@@ -36,6 +54,7 @@ import { computed, ref } from "vue";
 import { useStore } from "vuex";
 import checkAccess from "@/access/checkAccess";
 import ACCESS_ENUM from "@/access/accessEnum";
+import { UserControllerService } from "../../generated";
 
 const router = useRouter();
 const store = useStore();
@@ -53,6 +72,15 @@ const visibleRoutes = computed(() => {
     return true;
   });
 });
+
+const logout = () => {
+  UserControllerService.userLogoutUsingPost();
+  doMenuClick("/user/login");
+};
+
+const login = () => {
+  doMenuClick("/user/login");
+};
 
 //路由跳转
 router.afterEach((to, from, failure) => {
