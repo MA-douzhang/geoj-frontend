@@ -45,6 +45,9 @@
           </a-form-item>
         </a-space>
       </a-form-item>
+      <a-form-item field="tags" label="难度">
+        <a-radio-group v-model="form.difficulty" :options="difficultyOptions" />
+      </a-form-item>
       <a-form-item
         label="测试用例配置"
         :content-flex="false"
@@ -102,9 +105,10 @@ import { onMounted, ref } from "vue";
 import MdEditor from "@/components/MdEditor.vue";
 import { QuestionControllerService } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
+const router = useRouter();
 // 如果页面地址包含 update，视为更新页面
 const updatePage = route.path.includes("update");
 
@@ -126,6 +130,11 @@ let form = ref({
   ],
 });
 
+const difficultyOptions = [
+  { label: "简单", value: 1 },
+  { label: "中等", value: 2 },
+  { label: "困难", value: 3 },
+];
 /**
  * 根据题目 id 获取老的数据
  */
@@ -182,6 +191,10 @@ const doSubmit = async () => {
     );
     if (res.code === 0) {
       message.success("更新成功");
+      router.push({
+        path: "/",
+        replace: true,
+      });
     } else {
       message.error("更新失败，" + res.message);
     }
@@ -191,6 +204,10 @@ const doSubmit = async () => {
     );
     if (res.code === 0) {
       message.success("创建成功");
+      router.push({
+        path: "/",
+        replace: true,
+      });
     } else {
       message.error("创建失败，" + res.message);
     }

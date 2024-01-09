@@ -3,49 +3,24 @@
     <a-row :gutter="[24, 24]">
       <a-col :md="12" :xs="24">
         <a-tabs v-model:active-key="changeTab" type="line">
-          <a-tab-pane key="question" title="题目">
-            <a-card
-              v-if="question"
-              :title="question.title"
-              style="
-                height: 58.5vh;
-                min-height: 380px;
-                overflow: auto;
-                border: none;
-              "
-            >
-              <a-descriptions
-                title="判题条件"
-                :column="{ xs: 1, md: 2, lg: 3 }"
-              >
-                <a-descriptions-item label="时间限制">
-                  {{ question.judgeConfig.timeLimit ?? 0 }}
-                </a-descriptions-item>
-                <a-descriptions-item label="内存限制">
-                  {{ question.judgeConfig.memoryLimit ?? 0 }}
-                </a-descriptions-item>
-                <a-descriptions-item label="堆栈限制">
-                  {{ question.judgeConfig.stackLimit ?? 0 }}
-                </a-descriptions-item>
-              </a-descriptions>
-              <MdViewer :value="question.content || ''" />
-              <template #extra>
-                <a-space wrap>
-                  <a-tag
-                    v-for="(tag, index) of question.tags"
-                    :key="index"
-                    size="large"
-                    :color="getTagsObjectList(tag)"
-                    >{{ tag }}
-                  </a-tag>
-                </a-space>
-              </template>
-            </a-card>
+          <a-tab-pane key="question">
+            <template #title>
+              <icon-storage style="color: #007bff; margin-right: 5px" />题目描述
+            </template>
+            <QuestionViewPage :question="question" />
           </a-tab-pane>
-          <a-tab-pane key="answer" title="答案">
+          <a-tab-pane key="answer">
+            <template #title>
+              <icon-experiment style="color: #007bff; margin-right: 5px" />
+              题解
+            </template>
             <MdViewer :value="question?.answer || '暂无答案'" />
           </a-tab-pane>
-          <a-tab-pane key="ai" title="AI智能分析">
+          <a-tab-pane key="ai">
+            <template #title>
+              <icon-cloud style="color: #007bff; margin-right: 5px" />
+              AI智能分析
+            </template>
             <template v-if="targetSubmitId > 0">
               <a-skeleton animation v-if="aiResultLoading">
                 <a-skeleton-line :rows="4" />
@@ -131,13 +106,29 @@
         <a-card body-Style="{padding: 0" style="border-radius: 4px}">
           <div v-if="terminalOpen" style="position: relative; height: 150px">
             <a-tabs v-model:activeKey="activeTerminal">
-              <a-tab-pane key="1" title="测试用例">
-                <template v-if="activeTerminal">
-                  <div class="labelStyle">输入</div>
-                  <a-textarea v-model="textInput" />
+              <a-tab-pane key="1">
+                <template #title>
+                  <icon-check-square style="color: #02b128" />
+                  测试用例
                 </template>
+                <span class="labelStyle">输入</span>
+                <a-input
+                  :style="{
+                    width: '100%',
+                    height: '43px',
+                    borderRadius: '5px',
+                    backgroundColor: '#F2F3F4',
+                  }"
+                  v-model="textInput"
+                  placeholder="请输入测试用例"
+                  allow-clear
+                />
               </a-tab-pane>
-              <a-tab-pane key="2" title="执行结果">
+              <a-tab-pane key="2">
+                <template #title>
+                  <icon-code style="color: #02b128" />
+                  执行结果
+                </template>
                 <template v-if="testResult">
                   <div class="labelStyle">输入</div>
                   <div class="cardStyle">{{ testResult.input }}</div>
@@ -239,6 +230,8 @@ import {
 import { tagsObjectList } from "../../utils/constants";
 import { isUndefined } from "@arco-design/web-vue/es/_utils/is";
 import SubmitDetail from "@/components/SubmitDetail.vue";
+import { useStore } from "vuex";
+import QuestionViewPage from "@/components/QuestionView.vue";
 
 interface Props {
   id: string;
@@ -247,7 +240,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   id: () => "",
 });
-
+const store = useStore();
 const question = ref<QuestionVO>();
 const terminalOpen = ref<boolean>(false);
 const activeTerminal = ref<string>("1");

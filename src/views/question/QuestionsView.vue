@@ -40,6 +40,19 @@
           }% (${record.acceptedNum}/${record.submitNum})`
         }}
       </template>
+      <template #difficulty="{ record }">
+        <div style="display: flex">
+          <span v-if="record.difficulty === 1" style="color: #00af9b">
+            简单
+          </span>
+          <span v-else-if="record.difficulty === 2" style="color: #ffb800">
+            中等
+          </span>
+          <span v-else-if="record.difficulty === 3" style="color: #ff2d55">
+            困难
+          </span>
+        </div>
+      </template>
       <template #createTime="{ record }">
         {{ moment(record.createTime).format("YYYY-MM-DD") }}
       </template>
@@ -107,12 +120,12 @@ onMounted(() => {
 // {id: "1", title: "A+ D", content: "新的题目内容", tags: "["二叉树"]", answer: "新的答案", submitNum: 0,…}
 
 const columns = [
+  // {
+  //   title: "题号",
+  //   dataIndex: "id",
+  // },
   {
-    title: "题号",
-    dataIndex: "id",
-  },
-  {
-    title: "题目名称",
+    title: "题目",
     dataIndex: "title",
   },
   {
@@ -122,6 +135,11 @@ const columns = [
   {
     title: "通过率",
     slotName: "acceptedRate",
+  },
+  {
+    title: "难度",
+    slotName: "difficulty",
+    dataIndex: "difficulty",
   },
   {
     title: "创建时间",

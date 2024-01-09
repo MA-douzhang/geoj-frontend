@@ -16,6 +16,7 @@ export type Question = {
     submitNum?: number;
     tags?: string;
     thumbNum?: number;
+    difficulty?: number;
     title?: string;
     updateTime?: string;
     userId?: number;

@@ -18,6 +18,7 @@ export type QuestionVO = {
     tags?: Array<string>;
     thumbNum?: number;
     title?: string;
+    difficulty?: number;
     updateTime?: string;
     userId?: number;
     userVO?: UserVO;
