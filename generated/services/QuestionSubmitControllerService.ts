@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { BaseResponse_AnswerAi_ } from '../models/BaseResponse_AnswerAi_';
+import type { BaseResponse_int_ } from '../models/BaseResponse_int_';
 import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
 import type { BaseResponse_Page_QuestionSubmitVO_ } from '../models/BaseResponse_Page_QuestionSubmitVO_';
 import type { BaseResponse_QuestionRunResult_ } from '../models/BaseResponse_QuestionRunResult_';
@@ -54,6 +55,29 @@ id?: number,
             url: '/api/question/submit/get/ai',
             query: {
                 'id': id,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * getQuestionDifficultyByUserId
+     * @param difficulty difficulty
+     * @returns BaseResponse_int_ OK
+     * @throws ApiError
+     */
+    public static getQuestionDifficultyByUserIdUsingGet(
+difficulty?: number,
+): CancelablePromise<BaseResponse_int_> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/question/submit/get/difficulty',
+            query: {
+                'difficulty': difficulty,
             },
             errors: {
                 401: `Unauthorized`,

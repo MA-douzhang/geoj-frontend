@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { BaseResponse_boolean_ } from '../models/BaseResponse_boolean_';
+import type { BaseResponse_int_ } from '../models/BaseResponse_int_';
 import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
 import type { BaseResponse_Page_Question_ } from '../models/BaseResponse_Page_Question_';
 import type { BaseResponse_Page_QuestionVO_ } from '../models/BaseResponse_Page_QuestionVO_';
@@ -100,6 +101,52 @@ id?: number,
             url: '/api/question/get',
             query: {
                 'id': id,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * getQuestionCountByDifficulty
+     * @param difficulty difficulty
+     * @returns BaseResponse_long_ OK
+     * @throws ApiError
+     */
+    public static getQuestionCountByDifficultyUsingGet(
+difficulty?: number,
+): CancelablePromise<BaseResponse_long_> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/question/get/difficulty',
+            query: {
+                'difficulty': difficulty,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * getQuestionStatueById
+     * @param questionId questionId
+     * @returns BaseResponse_int_ OK
+     * @throws ApiError
+     */
+    public static getQuestionStatueByIdUsingGet(
+questionId?: number,
+): CancelablePromise<BaseResponse_int_> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/question/get/statue',
+            query: {
+                'questionId': questionId,
             },
             errors: {
                 401: `Unauthorized`,

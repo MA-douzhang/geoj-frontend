@@ -85,3 +85,12 @@ export type { AnswerAi } from './models/AnswerAi';
 export type { BaseResponse_AnswerAi_ } from './models/BaseResponse_AnswerAi_';
 
 export { QuestionAiControllerService } from './services/QuestionAiControllerService';
+
+export type { BaseResponse_int_ } from './models/BaseResponse_int_';
+
+
+export type { BaseResponse_QuestionDifficultyVO_ } from './models/BaseResponse_QuestionDifficultyVO_';
+
+export type { QuestionDifficultyVO } from './models/QuestionDifficultyVO';
+
+
