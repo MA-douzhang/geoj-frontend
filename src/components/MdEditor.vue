@@ -3,6 +3,7 @@
     :value="value"
     :mode="mode"
     :plugins="plugins"
+    :upload-images="handleUploadFile"
     @change="handleChange"
   />
 </template>
@@ -12,6 +13,7 @@ import gfm from "@bytemd/plugin-gfm";
 import highlight from "@bytemd/plugin-highlight";
 import { Editor, Viewer } from "@bytemd/vue-next";
 import { ref, withDefaults, defineProps } from "vue";
+import { OssControllerService } from "../../generated";
 
 /**
  * 定义组件属性类型
@@ -38,6 +40,19 @@ const props = withDefaults(defineProps<Props>(), {
     console.log(v);
   },
 });
+
+const handleUploadFile = async (files: any) => {
+  const res = await OssControllerService.uploadUsingPost(files);
+  console.log(res);
+  console.log(res.data);
+
+  return [
+    {
+      title: "图片",
+      url: res.data,
+    },
+  ];
+};
 </script>
 
 <style>

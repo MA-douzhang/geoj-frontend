@@ -94,3 +94,6 @@ export type { BaseResponse_QuestionDifficultyVO_ } from './models/BaseResponse_Q
 export type { QuestionDifficultyVO } from './models/QuestionDifficultyVO';
 
 
+export type { BaseResponse_string_ } from './models/BaseResponse_string_';
+
+export { OssControllerService } from './services/OssControllerService';
