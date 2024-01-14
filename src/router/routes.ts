@@ -7,6 +7,8 @@ import UserRegisterView from "@/views/user/UserRegisterView.vue";
 import { RouteRecordRaw } from "vue-router";
 import ACCESS_ENUM from "@/access/accessEnum";
 import AddQuestionView from "@/views/question/AddQuestionView.vue";
+import AddQuestionAnswerView from "@/views/question/AddQuestionAnswerView.vue";
+
 import ManageQuestionView from "@/views/question/ManageQuestionView.vue";
 import QuestionsView from "@/views/question/QuestionsView.vue";
 import ViewQuestionView from "@/views/question/ViewQuestionView.vue";
@@ -70,6 +72,18 @@ export const routes: Array<RouteRecordRaw> = [
     path: "/update/question",
     name: "更新题目",
     component: AddQuestionView,
+    meta: {
+      hideInMenu: true,
+      access: ACCESS_ENUM.ADMIN,
+    },
+    // meta: {
+    //   access: ACCESS_ENUM.ADMIN,
+    // },
+  },
+  {
+    path: "/add/question/answer",
+    name: "添加题解",
+    component: AddQuestionAnswerView,
     meta: {
       hideInMenu: true,
       access: ACCESS_ENUM.ADMIN,

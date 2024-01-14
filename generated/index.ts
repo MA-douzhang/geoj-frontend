@@ -97,3 +97,26 @@ export type { QuestionDifficultyVO } from './models/QuestionDifficultyVO';
 export type { BaseResponse_string_ } from './models/BaseResponse_string_';
 
 export { OssControllerService } from './services/OssControllerService';
+
+export type { BaseResponse_Page_Post_ } from './models/BaseResponse_Page_Post_';
+export type { BaseResponse_Page_PostVO_ } from './models/BaseResponse_Page_PostVO_';
+
+export type { BaseResponse_PostVO_ } from './models/BaseResponse_PostVO_';
+
+export type { Page_Post_ } from './models/Page_Post_';
+export type { Page_PostVO_ } from './models/Page_PostVO_';
+
+export type { Post } from './models/Post';
+export type { PostAddRequest } from './models/PostAddRequest';
+export type { PostEditRequest } from './models/PostEditRequest';
+export type { PostFavourAddRequest } from './models/PostFavourAddRequest';
+export type { PostFavourQueryRequest } from './models/PostFavourQueryRequest';
+export type { PostQueryRequest } from './models/PostQueryRequest';
+export type { PostThumbAddRequest } from './models/PostThumbAddRequest';
+export type { PostUpdateRequest } from './models/PostUpdateRequest';
+export type { PostVO } from './models/PostVO';
+
+
+export { PostControllerService } from './services/PostControllerService';
+export { PostFavourControllerService } from './services/PostFavourControllerService';
+export { PostThumbControllerService } from './services/PostThumbControllerService';

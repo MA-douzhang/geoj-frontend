@@ -14,7 +14,7 @@
               <icon-experiment style="color: #007bff; margin-right: 5px" />
               题解
             </template>
-            <MdViewer :value="question?.answer || '暂无答案'" />
+            <QuestionAnswer :question-id="question?.id" />
           </a-tab-pane>
           <a-tab-pane key="ai">
             <template #title>
@@ -216,7 +216,6 @@ import {
 } from "vue";
 import message from "@arco-design/web-vue/es/message";
 import CodeEditor from "@/components/CodeEditor.vue";
-import MdViewer from "@/components/MdViewer.vue";
 import {
   AnswerAi,
   JudgeCase,
@@ -232,6 +231,7 @@ import { isUndefined } from "@arco-design/web-vue/es/_utils/is";
 import SubmitDetail from "@/components/SubmitDetail.vue";
 import { useStore } from "vuex";
 import QuestionViewPage from "@/components/QuestionView.vue";
+import QuestionAnswer from "@/components/QuestionAnswer.vue";
 
 interface Props {
   id: string;
