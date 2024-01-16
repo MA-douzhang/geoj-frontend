@@ -1,5 +1,7 @@
 <template>
-  <div style="margin: 0 auto">
+  <div
+    style="margin: 0 auto; overflow: scroll; overflow-x: hidden; height: 80vh"
+  >
     <template v-if="isClickAnswer">
       <AnswerDetail
         :question-answer-id="questionAnswerId"
@@ -44,7 +46,6 @@
           <div
             style="
               background-color: #ffffff;
-              width: 880px;
               height: 184px;
               display: flex;
               justify-content: center;

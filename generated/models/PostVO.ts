@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { PostCommentVO } from './PostCommentVO';
 import type { UserVO } from './UserVO';
 
 export type PostVO = {
@@ -12,6 +13,7 @@ export type PostVO = {
     hasFavour?: boolean;
     hasThumb?: boolean;
     id?: number;
+    postCommentList?: Array<PostCommentVO>;
     questionId?: number;
     tagList?: Array<string>;
     thumbNum?: number;
@@ -19,4 +21,5 @@ export type PostVO = {
     updateTime?: string;
     user?: UserVO;
     userId?: number;
+
 };

@@ -120,3 +120,11 @@ export type { PostVO } from './models/PostVO';
 export { PostControllerService } from './services/PostControllerService';
 export { PostFavourControllerService } from './services/PostFavourControllerService';
 export { PostThumbControllerService } from './services/PostThumbControllerService';
+
+export type { BaseResponse_Page_PostCommentVO_ } from './models/BaseResponse_Page_PostCommentVO_';
+
+export type { Page_PostCommentVO_ } from './models/Page_PostCommentVO_';
+
+export type { PostCommentAddRequest } from './models/PostCommentAddRequest';
+export type { PostCommentQueryRequest } from './models/PostCommentQueryRequest';
+export type { PostCommentVO } from './models/PostCommentVO';
