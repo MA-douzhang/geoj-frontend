@@ -184,9 +184,8 @@ import {
   PostCommentQueryRequest,
   PostCommentVO,
   PostControllerService,
-  PostQueryRequest,
+  PostThumbControllerService,
   PostVO,
-  UserControllerService,
 } from "../../generated";
 
 import MdViewer from "@/components/MdViewer.vue";
@@ -305,6 +304,24 @@ const addComment = async (questionAnswerId: number) => {
     commentText.value = "";
   } else {
     message.error("加载失败：" + res.message);
+  }
+};
+
+// 点爱心
+const onLikeChange = async (postCommentId: number) => {
+  const res = await PostThumbControllerService.doCommonThumbUsingPost({
+    postCommentId: postCommentId,
+  });
+  if (res.code === 0) {
+    console.log("点赞数据：", res.data);
+    const index = dataList.value.findIndex((item) => item.id === postCommentId);
+    if (index !== -1) {
+      const postComment = dataList.value[index];
+      postComment.thumbNum += res.data === 1 ? 1 : -1;
+      postComment.hasThumb = res.data === 1 ? 1 : -1;
+    }
+  } else {
+    message.error("点赞失败：" + res.message);
   }
 };
 </script>

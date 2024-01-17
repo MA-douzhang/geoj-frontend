@@ -128,3 +128,5 @@ export type { Page_PostCommentVO_ } from './models/Page_PostCommentVO_';
 export type { PostCommentAddRequest } from './models/PostCommentAddRequest';
 export type { PostCommentQueryRequest } from './models/PostCommentQueryRequest';
 export type { PostCommentVO } from './models/PostCommentVO';
+
+export type { PostCommentThumbAddRequest } from './models/PostCommentThumbAddRequest';

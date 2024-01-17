@@ -21,5 +21,4 @@ export type PostVO = {
     updateTime?: string;
     user?: UserVO;
     userId?: number;
-
 };
