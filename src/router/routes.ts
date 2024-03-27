@@ -4,6 +4,7 @@ import NoAuthView from "@/views/NoAuthView.vue";
 import UserLayout from "@/layouts/UserLayout.vue";
 import UserLoginView from "@/views/user/UserLoginView.vue";
 import UserRegisterView from "@/views/user/UserRegisterView.vue";
+import UserInfoView from "@/views/user/UserInfoView.vue";
 import { RouteRecordRaw } from "vue-router";
 import ACCESS_ENUM from "@/access/accessEnum";
 import AddQuestionView from "@/views/question/AddQuestionView.vue";
@@ -30,6 +31,15 @@ export const routes: Array<RouteRecordRaw> = [
         name: "用户注册",
         component: UserRegisterView,
       },
+      {
+        path: "/user/info",
+        name: "用户信息",
+        component: UserInfoView,
+        meta: {
+          access: ACCESS_ENUM.USER,
+          hideInMenu: true,
+        },
+      },
     ],
     meta: {
       hideInMenu: true,
@@ -48,7 +58,6 @@ export const routes: Array<RouteRecordRaw> = [
     name: "浏览题目提交",
     component: QuestionSubmitView,
   },
-
   {
     path: "/view/question/:id",
     name: "在线做题",

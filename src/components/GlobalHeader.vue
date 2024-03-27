@@ -35,7 +35,7 @@
             v-if="store.state.user?.loginUser?.userName !== `未登录`"
             #content
           >
-            <a-doption>个人信息</a-doption>
+            <a-doption @click="goUserInfo">个人信息</a-doption>
             <a-doption @click="logout">退出</a-doption>
           </template>
           <template v-else #content>
@@ -81,7 +81,12 @@ const logout = () => {
 const login = () => {
   doMenuClick("/user/login");
 };
-
+/**
+ * 个人主页
+ */
+const goUserInfo = () => {
+  doMenuClick("/user/info");
+};
 //路由跳转
 router.afterEach((to, from, failure) => {
   selectedKeys.value = [to.path];

@@ -1,6 +1,12 @@
 <template>
   <div
-    style="margin: 0 auto; overflow: scroll; overflow-x: hidden; height: 80vh"
+    style="
+      margin: 0 auto;
+      overflow: scroll;
+      overflow-x: hidden;
+      height: 80vh;
+      text-align: start;
+    "
   >
     <template v-if="isClickAnswer">
       <AnswerDetail
@@ -14,17 +20,6 @@
       ></AnswerDetail>
     </template>
     <template v-else>
-      <div style="text-align: right">
-        <a-button
-          type="primary"
-          status="success"
-          @click="addAnswer(questionId)"
-        >
-          <icon-pen-fill />
-          发布题解
-        </a-button>
-      </div>
-
       <a-list
         class="list-demo-action-layout"
         item-layout="horizontal"
@@ -163,11 +158,11 @@ import message from "@arco-design/web-vue/es/message";
 import AnswerDetail from "@/components/AnswerDetail.vue";
 
 interface Props {
-  questionId?: number;
+  userId?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  questionId: () => 0,
+  userId: () => 0,
 });
 const route = useRoute();
 const router = useRouter();
@@ -190,7 +185,6 @@ const searchParams = ref<PostQueryRequest>({
   searchText: "",
   title: "",
   tags: [],
-  questionId: 0,
   pageSize: 10, // 设置pageSize的初始值
   current: 1,
   sortField: "thumbNum",
@@ -216,10 +210,10 @@ const props = withDefaults(defineProps<Props>(), {
 });*/
 
 const loadData = async () => {
-  const res = await PostControllerService.listPostVoByPageUsingPost(
+  const res = await PostControllerService.listMyPostVoByPageUsingPost(
     (searchParams.value = {
       ...searchParams.value,
-      questionId: props.questionId,
+      userId: props.userId,
     })
   );
   if (res.code === 0) {
